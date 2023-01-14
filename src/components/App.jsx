@@ -10,23 +10,39 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export class App extends Component {
-	state = {
-		contacts: [
-			{ id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-			{ id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-			{ id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-			{ id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-		],
-
-		filter: '',
+	static defaultProps = {
+		CONTACTS_KEY: 'CONTACTS',
 	};
+	constructor(props) {
+		super(props);
+		this.state = {
+			contacts: [],
+
+			filter: '',
+		};
+	}
+
+	componentDidMount() {
+		const contactsFromLocaleStorage = localStorage.getItem(this.props.CONTACTS_KEY);
+		const parsedContacts = JSON.parse(contactsFromLocaleStorage);
+		if (parsedContacts) {
+			this.setState({ contacts: parsedContacts });
+		}
+	}
+	componentDidUpdate(prevstate, prevprops) {
+		const { contacts } = this.state;
+		if (prevstate !== contacts) {
+			localStorage.setItem(this.props.CONTACTS_KEY, JSON.stringify(contacts));
+		}
+	}
+
 	// filtering our contacts on input
 	changeFilter = e => {
 		this.setState({ filter: e.currentTarget.value });
 	};
 	deleteContact = contactId => {
-		this.setState(prevstate => ({
-			contacts: prevstate.contacts.filter(contact => contact.id !== contactId),
+		this.setState(({ contacts }) => ({
+			contacts: contacts.filter(contact => contact.id !== contactId),
 		}));
 	};
 
@@ -50,7 +66,7 @@ export class App extends Component {
 	render() {
 		const { contacts, filter } = this.state;
 		const visibleTodos = contacts.filter(({ name }) =>
-			name.toLowerCase().includes(this.state.filter.toLowerCase())
+			name.toLowerCase().includes(filter.toLowerCase())
 		);
 		return (
 			<>

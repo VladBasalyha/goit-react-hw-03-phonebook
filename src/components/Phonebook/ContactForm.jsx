@@ -24,11 +24,7 @@ export class ContactForm extends Component {
 
 		this.props.onSubmit(this.state);
 		const { contacts } = this.props;
-		if (
-			contacts.find(
-				contact => contact.name.toLowerCase() === this.state.name.toLowerCase()
-			)
-		) {
+		if (contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase())) {
 			return toast.error(`Contact "${name}" already exists!`, {
 				position: toast.POSITION.TOP_RIGHT,
 				autoClose: 2500,
