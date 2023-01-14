@@ -13,14 +13,11 @@ export class App extends Component {
 	static defaultProps = {
 		CONTACTS_KEY: 'CONTACTS',
 	};
-	constructor(props) {
-		super(props);
-		this.state = {
-			contacts: [],
+	state = {
+		contacts: [],
 
-			filter: '',
-		};
-	}
+		filter: '',
+	};
 
 	componentDidMount() {
 		const contactsFromLocaleStorage = localStorage.getItem(this.props.CONTACTS_KEY);
